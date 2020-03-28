@@ -24,7 +24,7 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
-###ESLint config
+### ESLint config
 ```
 {
   "eslint.autoFixOnSave": true,//保存时自动格式化
@@ -41,4 +41,18 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     }
   ]
 }
+```
+
+### Git常用操作
+#### 查看git状态
+```
+git status
+```
+#### 创建分支并跳转
+```
+git checkout -b 'NewBranchName'
+```
+#### 查看分支
+```
+git branch
 ```

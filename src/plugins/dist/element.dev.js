@@ -13,3 +13,5 @@ _vue["default"].use(_elementUi.Form);
 _vue["default"].use(_elementUi.FormItem);
 
 _vue["default"].use(_elementUi.Input);
+
+_vue["default"].prototype.$message = _elementUi.Message; // 全局挂载

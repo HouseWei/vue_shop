@@ -9,7 +9,9 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _vueRouter = _interopRequireDefault(require("vue-router"));
 
-var _login = _interopRequireDefault(require("../components/login.vue"));
+var _Login = _interopRequireDefault(require("../components/Login.vue"));
+
+var _Home = _interopRequireDefault(require("../components/Home.vue"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -21,7 +23,10 @@ var routes = [{
 }, // 重定向
 {
   path: '/login',
-  component: _login["default"]
+  component: _Login["default"]
+}, {
+  path: '/home',
+  component: _Home["default"]
 }];
 var router = new _vueRouter["default"]({
   routes: routes

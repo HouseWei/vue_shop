@@ -7,6 +7,12 @@ import './assets/css/global.css'
 // 导入字体图标
 import './assets/fonts/iconfont.css'
 
+// 导入axios
+import axios from 'axios'
+// 配置请求的根路径
+axios.defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'
+Vue.prototype.$http = axios
+
 Vue.config.productionTip = false
 
 new Vue({

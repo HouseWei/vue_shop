@@ -76,11 +76,11 @@ git checkout -b 'NewBranchName'
 ```
 #### 查看分支
 ```
+git branch
+```
 #### 跳转分支
 ```
 git checkout branchName
-```
-git branch
 ```
 #### 从github更新代码到本地
 ```
@@ -88,3 +88,32 @@ git pull origin branchName
 ```
 
 
+### 本地代码提交到github 流程
+#### 查看状态
+```
+git status
+```
+#### 添加到暂存区
+```
+git add .
+```
+#### 保存到本地
+```
+git commit -m "备注消息"
+```
+#### 查看分支
+```
+git branch
+```
+#### 切换分支
+```
+git checkout branchName
+```
+#### 合并某一分支 到 master
+```
+git merge branchname
+```
+#### 推送到云端
+```
+git push
+```

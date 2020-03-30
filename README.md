@@ -89,31 +89,31 @@ git pull origin branchName
 
 
 ### 本地代码提交到github 流程
-#### 查看状态
+#### 1. 查看状态
 ```
 git status
 ```
-#### 添加到暂存区
+#### 2. 添加到暂存区
 ```
 git add .
 ```
-#### 保存到本地
+#### 3. 保存到本地
 ```
 git commit -m "备注消息"
 ```
-#### 查看分支
+#### 4. 查看分支
 ```
 git branch
 ```
-#### 切换分支
+#### 5. 切换分支
 ```
 git checkout branchName
 ```
-#### 合并某一分支 到 master
+#### 6. 合并某一分支 到 master
 ```
 git merge branchname
 ```
-#### 推送到云端
+#### 7. 推送到云端
 ```
 git push
 ```

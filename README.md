@@ -62,5 +62,5 @@ git branch
 ```
 #### 从github更新代码到本地
 ```
-git fetch origin branchName
+git pull origin branchName
 ```

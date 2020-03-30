@@ -43,7 +43,7 @@ export default {
         // 验证用户名
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          { min: 5, max: 10, message: '长度在 5 到 10 个字符', trigger: 'blur' }
         ],
         // 验证密码
         password: [

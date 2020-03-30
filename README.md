@@ -54,5 +54,13 @@ git checkout -b 'NewBranchName'
 ```
 #### 查看分支
 ```
+#### 跳转分支
+```
+git checkout branchName
+```
 git branch
+```
+#### 从github更新代码到本地
+```
+git fetch origin branchName
 ```

@@ -20,7 +20,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 // 导入字体图标
 // 导入axios
 // 配置请求的根路径
-_axios["default"].defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/';
+_axios["default"].defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'; // axios请求拦截(添加token,保证拥有获取数据的权限)
+
+_axios["default"].interceptors.request.use(function (config) {
+  // console.log(config)
+  config.headers.Authorization = window.sessionStorage.getItem('token'); // 在最后必须 return config
+
+  return config;
+});
+
 _vue["default"].prototype.$http = _axios["default"];
 _vue["default"].config.productionTip = false;
 new _vue["default"]({

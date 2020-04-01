@@ -13,8 +13,8 @@
         <!-- 搜索与添加区域 -->
         <el-row :gutter="20">
           <el-col :span="8">
-            <el-input placeholder="请输入内容">
-              <el-button slot="append" icon="el-icon-search"></el-button>
+            <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="getUsersList">
+              <el-button slot="append" icon="el-icon-search" @click="getUsersList"></el-button>
             </el-input>
           </el-col>
           <el-col :span="4">
@@ -23,7 +23,7 @@
         </el-row>
 
         <!-- 用户列表区域 -->
-        <el-table class="table_container" :data="userList" border stripe empty-text>
+        <el-table class="table_container" :data="userList" border stripe>
           <el-table-column type="index" label="序号"></el-table-column>
           <el-table-column label="姓名" prop="username"></el-table-column>
           <el-table-column label="邮箱" prop="email"></el-table-column>
@@ -78,7 +78,7 @@ export default {
       queryInfo: {
         query: '',
         pagenum: 1, // 当前的页数
-        pagesize: 2 // 当前每页显示多少条数据
+        pagesize: 4 // 当前每页显示多少条数据
       },
       userList: [],
       total: 0

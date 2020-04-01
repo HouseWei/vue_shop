@@ -42,4 +42,10 @@ _vue["default"].use(_elementUi.Table);
 
 _vue["default"].use(_elementUi.TableColumn);
 
+_vue["default"].use(_elementUi.Switch);
+
+_vue["default"].use(_elementUi.Tooltip);
+
+_vue["default"].use(_elementUi.Pagination);
+
 _vue["default"].prototype.$message = _elementUi.Message; // 全局挂载

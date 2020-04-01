@@ -15,6 +15,8 @@ var _Home = _interopRequireDefault(require("../components/Home.vue"));
 
 var _Welcome = _interopRequireDefault(require("../components/Welcome.vue"));
 
+var _Users = _interopRequireDefault(require("../components/user/Users.vue"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 _vue["default"].use(_vueRouter["default"]);
@@ -33,6 +35,9 @@ var routes = [{
   children: [{
     path: '/welcome',
     component: _Welcome["default"]
+  }, {
+    path: '/users',
+    component: _Users["default"]
   }]
 }];
 var router = new _vueRouter["default"]({

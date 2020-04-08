@@ -68,7 +68,7 @@
       </div>
     </el-card>
     <!-- 添加用户的对话框 -->
-    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="30%">
+    <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="30%" @close="addDialogClosed">
       <!-- 内容主体区域 -->
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
         <el-form-item label="用户名" prop="username">
@@ -87,7 +87,7 @@
       <!-- 底部区域 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="adduser">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -96,12 +96,36 @@
 <script>
 export default {
   data () {
+    // 验证邮箱的规则
+    var checkEmail = (rule, value, cb) => {
+      // 验证邮箱的正则表达式
+      var regEmail = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+
+      if (regEmail.test(value)) {
+        // 合法的邮箱
+        return cb()
+      }
+
+      cb(new Error('请输入合法的邮箱'))
+    }
+    // 验证手机的规则
+    var checkMobile = (rule, value, cb) => {
+      // 验证手机号的正则表达式
+      const regMobile = /^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/
+
+      if (regMobile.test(value)) {
+        // 合法的手机号
+        return cb()
+      }
+
+      cb(new Error('请输入合法的手机号'))
+    }
     return {
       // 获取用户列表的参数对象
       queryInfo: {
         query: '',
         pagenum: 1, // 当前的页数
-        pagesize: 4 // 当前每页显示多少条数据
+        pagesize: 5 // 当前每页显示多少条数据
       },
       userList: [],
       total: 0,
@@ -117,18 +141,29 @@ export default {
       addFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 3, max: 10, message: '用户名的长度在3~10个字符之间', trigger: 'blur' }
+          {
+            min: 3,
+            max: 10,
+            message: '用户名的长度在3~10个字符之间',
+            trigger: 'blur'
+          }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '密码的长度在6~15个字符之间', trigger: 'blur' }
+          {
+            min: 6,
+            max: 15,
+            message: '密码的长度在6~15个字符之间',
+            trigger: 'blur'
+          }
         ],
         email: [
-          { required: true, message: '请输入邮箱', trigger: 'blur' }
-
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
         ],
         mobile: [
-          { required: true, message: '请输入手机', trigger: 'blur' }
+          { required: true, message: '请输入手机', trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
         ]
       }
     }
@@ -137,6 +172,7 @@ export default {
     this.getUsersList()
   },
   methods: {
+    // 获取用户列表数据
     async getUsersList () {
       const { data: res } = await this.$http.get('/users', {
         params: this.queryInfo
@@ -172,6 +208,28 @@ export default {
         return this.$message.error('更新用户状态失败')
       }
       this.$message.success('更新用户状态成功')
+    },
+    // 监听 添加用户对话框的关闭事件
+    addDialogClosed () {
+      this.$refs.addFormRef.resetFields()
+    },
+    // 点击按钮,添加新用户
+    adduser () {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) {}
+        // 可以发起添加用户的网络请求
+        const { data: res } = await this.$http.post('users', this.addForm)
+        console.log(res)
+        if (res.meta.status !== 201) {
+          this.$message.error('添加用户失败!')
+        }
+
+        this.$message.success('添加用户成功!')
+        // 隐藏添加用户的对话框
+        this.addDialogVisible = false
+        // 重新获取用户列表数据
+        this.getUsersList()
+      })
     }
   }
 }

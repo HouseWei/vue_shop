@@ -48,4 +48,6 @@ _vue["default"].use(_elementUi.Tooltip);
 
 _vue["default"].use(_elementUi.Pagination);
 
+_vue["default"].use(_elementUi.Dialog);
+
 _vue["default"].prototype.$message = _elementUi.Message; // 全局挂载

@@ -23,7 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 _axios["default"].defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'; // axios请求拦截(添加token,保证拥有获取数据的权限)
 
 _axios["default"].interceptors.request.use(function (config) {
-  // console.log(config)
+  console.log(config);
   config.headers.Authorization = window.sessionStorage.getItem('token'); // 在最后必须 return config
 
   return config;

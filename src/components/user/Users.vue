@@ -174,7 +174,7 @@ export default {
   methods: {
     // 获取用户列表数据
     async getUsersList () {
-      const { data: res } = await this.$http.get('/users', {
+      const { data: res } = await this.$http.get('users', {
         params: this.queryInfo
       })
       console.log(res)

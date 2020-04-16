@@ -50,4 +50,8 @@ _vue["default"].use(_elementUi.Pagination);
 
 _vue["default"].use(_elementUi.Dialog);
 
+_vue["default"].use(_elementUi.Popconfirm);
+
 _vue["default"].prototype.$message = _elementUi.Message; // 全局挂载
+
+_vue["default"].prototype.$confirm = _elementUi.MessageBox;

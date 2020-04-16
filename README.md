@@ -117,3 +117,13 @@ git merge branchname
 ```
 git push
 ```
+
+### 本地创建新的分支,并推送到github
+#### 1.创建分支
+```
+git checkout -b 分支名
+```
+#### 2.推送到云端
+```
+git push -u origin 分支名
+```

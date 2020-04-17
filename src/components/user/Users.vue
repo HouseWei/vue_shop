@@ -45,7 +45,12 @@
                 @click="showEditDislog(scope.row.id)"
               ></el-button>
               <!-- 删除按钮 -->
-              <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
+              <el-button
+                type="danger"
+                icon="el-icon-delete"
+                size="mini"
+                @click="removeUserById(scope.row.id)"
+              ></el-button>
               <!-- 分配角色按钮 -->
               <el-tooltip
                 class="item"
@@ -54,7 +59,7 @@
                 placement="top"
                 :enterable="false"
               >
-                <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+                <el-button type="warning" icon="el-icon-setting" size="mini" @click="setRole(scope.row)"></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -112,6 +117,19 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="EditDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="editUserInfo">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 分配角色的对话框 -->
+
+    <el-dialog title="分配角色" :visible.sync="setRoleDislogVisible" width="30%">
+      <div>
+        <p>当前的用户: {{userInfo.username}}</p>
+        <p>当前的角色: {{userInfo.role_name}}</p>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoleDislogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="setRoleDislogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -203,7 +221,13 @@ export default {
           { required: true, message: '请输入手机', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ]
-      }
+      },
+      // 控制分配角色对话框的显示与隐藏
+      setRoleDislogVisible: false,
+      // 需要被分配角色的用户信息
+      userInfo: {},
+      // 所有角色的数据列表
+      rolesList: []
     }
   },
   created () {
@@ -311,11 +335,15 @@ export default {
     // 删除用户
     async removeUserById (id) {
       // 弹框询问
-      const confirmResult = await this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(err => err)
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该文件, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
       console.log(confirmResult)
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消')
@@ -326,6 +354,20 @@ export default {
       }
       this.$message.success('删除成功')
       this.getUsersList()
+    },
+    // 展示分配角色的对话框
+    async setRole (userInfo) {
+      this.userInfo = userInfo
+
+      // 在展示对话框之前获取所有的角色列表
+      const { data: res } = await this.$hhtp.get('roles')
+      if (res.meta.stauts !== 200) {
+        return this.$message.error('获取角色列表失败!')
+      }
+
+      this.rolesList = res.data
+
+      this.setRoleDislogVisible = true
     }
   }
 }

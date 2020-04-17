@@ -11,24 +11,64 @@
     <el-card>
       <!-- 添加角色按钮区域 -->
       <el-row>
-          <el-col>
-              <el-button type="primary" @click="addDialogVisible = true">添加角色</el-button>
-          </el-col>
+        <el-col>
+          <el-button type="primary" @click="addDialogVisible = true">添加角色</el-button>
+        </el-col>
       </el-row>
 
       <!-- 角色列表区域 -->
       <el-table :data="rolesList" border stripe>
-          <el-table-column type="expand"></el-table-column>
-          <el-table-column type="index" label="#"></el-table-column>
-          <el-table-column label="角色名称" prop="roleName"></el-table-column>
-          <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
-          <el-table-column label="操作" width="300px">
-              <template slot-scope="scope">
-                  <el-button type="primary" icon="el-icon-edit" size="mini" @click="editRoles(scope.row.id)">编辑</el-button>
-                  <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteRoles(scope.row.id)">删除</el-button>
-                  <el-button type="warning" icon="el-icon-setting" size="mini">分配权限</el-button>
-              </template>
-          </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <el-row
+              :class="['bdbottom',i1 === 0 ? 'bdtop': '']"
+              v-for="(item1, i1) in scope.row.children"
+              :key="item1.id"
+            >
+              <!-- 渲染一级权限 -->
+              <el-col :span="5">
+                <el-tag>{{item1.authName}}</el-tag>
+                <i class="el-icon-caret-right"></i>
+              </el-col>
+              <!-- 渲染二三级权限 -->
+              <el-col :span="19">
+                <!-- 通过for循环 嵌套渲染二级权限 -->
+                <el-row :class="[i2 === 0 ? '': 'bdtop']" v-for="(item2,i2) in item1.children" :key="item2.id">
+                  <!-- 二级权限 -->
+                  <el-col>
+                    <el-tag type="success">{{item2.authName}}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+                  <!-- 三级权限 -->
+                  <el-col></el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+            <pre>
+                  {{scope.row}}
+                  </pre>
+          </template>
+        </el-table-column>
+        <el-table-column type="index" label="#"></el-table-column>
+        <el-table-column label="角色名称" prop="roleName"></el-table-column>
+        <el-table-column label="角色描述" prop="roleDesc"></el-table-column>
+        <el-table-column label="操作" width="300px">
+          <template slot-scope="scope">
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              size="mini"
+              @click="editRoles(scope.row.id)"
+            >编辑</el-button>
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              size="mini"
+              @click="deleteRoles(scope.row.id)"
+            >删除</el-button>
+            <el-button type="warning" icon="el-icon-setting" size="mini">分配权限</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
 
@@ -156,10 +196,13 @@ export default {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
         // 发送请求
-        const { data: res } = await this.$http.put('roles/' + this.editForm.roleId, {
-          roleName: this.editForm.roleName,
-          roleDesc: this.editForm.roleDesc
-        })
+        const { data: res } = await this.$http.put(
+          'roles/' + this.editForm.roleId,
+          {
+            roleName: this.editForm.roleName,
+            roleDesc: this.editForm.roleDesc
+          }
+        )
         console.log(res)
         if (res.meta.status !== 200) {
           return this.$message.error('修改失败!')
@@ -174,11 +217,15 @@ export default {
     async deleteRoles (id) {
       // console.log(id)
       // 弹框询问
-      const confirmResult = await this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(err => err)
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该角色, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
       console.log(confirmResult)
       if (confirmResult !== 'confirm') {
         return this.$message.info('已取消')
@@ -196,4 +243,15 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.el-tag {
+  margin: 7px;
+}
+
+.bdtop {
+  border-top: 1px solid #eee;
+}
+
+.bdbottom {
+  border-bottom: 1px solid #eee;
+}
 </style>

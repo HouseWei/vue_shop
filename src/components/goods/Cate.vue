@@ -60,11 +60,7 @@
     </el-card>
 
     <!-- 添加分类的对话框 -->
-    <el-dialog
-      title="添加分类"
-      :visible.sync="addCateDialogVisible"
-      width="50%"
-    >
+    <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%">
       <!-- 添加分类的表单 -->
       <el-form
         :model="addCateForm"
@@ -76,6 +72,13 @@
           <el-input v-model="addCateForm.cat_name"></el-input>
         </el-form-item>
         <el-form-item label="父级分类:">
+          <!-- options 用来指定数据源 -->
+          <el-cascader
+            v-model="selectedKeys"
+            :options="parentCateList"
+            :props="{ expandTrigger: 'hover',value:'cat_id',label:'cat_name',children:'children'}"
+            @change="parentCateChange"
+          ></el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -146,7 +149,15 @@ export default {
         ]
       },
       // 父级分类的列表
-      parentCateList: []
+      parentCateList: [],
+      // 指定级联选择器的配置对象
+      cascaederProps: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children'
+      },
+      // 选中的父级分类的 id数组
+      selectedKeys: []
     }
   },
   created () {
@@ -187,12 +198,18 @@ export default {
     },
     // 获取父级分类的数据列表
     async getParentCateList () {
-      const { data: res } = await this.$http.get('categories', { params: { type: 2 } })
+      const { data: res } = await this.$http.get('categories', {
+        params: { type: 2 }
+      })
       if (res.meta.status !== 200) {
         return this.message.error('获取父级分类失败!')
       }
       console.log(res.data)
       this.parentCateList = res.data
+    },
+    // 选择项发生变化出发这个函数
+    parentCateChange () {
+      console.log(this.selectedKeys)
     }
   }
 }

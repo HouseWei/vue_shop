@@ -10,12 +10,12 @@
     <!-- 卡片视图 -->
     <el-card>
       <el-row>
-        <el-button type="primary">添加分类</el-button>
+        <el-button type="primary" @click="showAddCateDialog">添加分类</el-button>
       </el-row>
 
       <!-- 表格 -->
       <tree-table
-      class="treeTable"
+        class="treeTable"
         :data="cateList"
         :columns="columns"
         :selection-type="false"
@@ -58,6 +58,32 @@
         :total="total"
       ></el-pagination>
     </el-card>
+
+    <!-- 添加分类的对话框 -->
+    <el-dialog
+      title="添加分类"
+      :visible.sync="addCateDialogVisible"
+      width="50%"
+      :before-close="handleClose"
+    >
+      <!-- 添加分类的表单 -->
+      <el-form
+        :model="addCateForm"
+        :rules="addCateFormRules"
+        ref="addCateFormRef"
+        label-width="100px"
+      >
+        <el-form-item label="分类名称:" prop="cat_name">
+          <el-input v-model="addCateForm.cat_name"></el-input>
+        </el-form-item>
+        <el-form-item label="父级分类:">
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addCateDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addCateDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -102,7 +128,24 @@ export default {
           // 表示,将当前这一列使用的模板名称
           template: 'opt'
         }
-      ]
+      ],
+      // 控制添加分类对话框的显示与隐藏
+      addCateDialogVisible: false,
+      // 添加分类的表单数据对象
+      addCateForm: {
+        // 分类的名称
+        cat_name: '',
+        // 父级分类的id
+        cat_pid: 0,
+        // 分类等级,默认一级
+        cat_level: 1
+      },
+      // 添加分类的表单验证规则对象
+      addCateFormRules: {
+        cat_name: [
+          { required: true, message: '请输入分类名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   created () {
@@ -111,7 +154,9 @@ export default {
   methods: {
     // 获取商品分类数据
     async getCateList () {
-      const { data: res } = await this.$http.get('categories', { params: this.queryInfo })
+      const { data: res } = await this.$http.get('categories', {
+        params: this.queryInfo
+      })
       if (res.meta.status !== 200) {
         return this.message.error('获取商品分类失败!')
       }
@@ -131,13 +176,17 @@ export default {
     handleCurrentChange (newpage) {
       this.queryInfo.pagenum = newpage
       this.getCateList()
+    },
+    // 点击按钮,展示添加分类的对话框
+    showAddCateDialog () {
+      this.addCateDialogVisible = true
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.treeTable{
+.treeTable {
   margin-top: 15px;
 }
 </style>

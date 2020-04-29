@@ -24,11 +24,34 @@
 export default {
   data () {
     return {
-
+      // 查询条件
+      queryInfo: {
+        type: 3,
+        pagenum: 1,
+        pagesize: 5
+      },
+      // 商品分类的数据列表,默认为空
+      cateList: [],
+      // 总数据条数
+      total: 0
     }
   },
+  created () {
+    this.getCateList()
+  },
   methods: {
-
+    // 获取商品分类数据
+    async getCateList () {
+      const { data: res } = await this.$http.get('categories', this.queryInfo)
+      if (res.meta.status !== 200) {
+        return this.message.error('获取商品分类失败!')
+      }
+      console.log(res)
+      // 把数据列表,赋值给cateList
+      this.cateList = res.data
+      // 为总数据条数赋值
+      this.total = res.data.length
+    }
   }
 }
 </script>

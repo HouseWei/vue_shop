@@ -12,12 +12,15 @@ require("./assets/css/global.css");
 
 require("./assets/fonts/iconfont.css");
 
+var _vueTableWithTreeGrid = _interopRequireDefault(require("vue-table-with-tree-grid"));
+
 var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 // 导入全局样式表
 // 导入字体图标
+// 导入tree-grid
 // 导入axios
 // 配置请求的根路径
 _axios["default"].defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'; // axios请求拦截(添加token,保证拥有获取数据的权限)
@@ -31,6 +34,9 @@ _axios["default"].interceptors.request.use(function (config) {
 
 _vue["default"].prototype.$http = _axios["default"];
 _vue["default"].config.productionTip = false;
+
+_vue["default"].component('tree-table', _vueTableWithTreeGrid["default"]);
+
 new _vue["default"]({
   router: _router["default"],
   render: function render(h) {

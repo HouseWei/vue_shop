@@ -40,7 +40,3 @@ body,
 .el-cascader-node__postfix {
     line-height: 2.5;
 }
-
-/* .el-popper[x-placement^=bottom] {
-    top: 325px !important;
-} */

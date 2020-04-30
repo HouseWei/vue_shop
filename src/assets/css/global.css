@@ -29,6 +29,7 @@ body,
     margin-top: 15px;
 }
 
+/* 级联选择框样式配置 */
 .el-cascader-panel {
     height: 200px;
 }

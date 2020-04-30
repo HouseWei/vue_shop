@@ -41,7 +41,7 @@
           <el-tag type="warning" size="mini" v-else>三级</el-tag>
         </template>
         <!-- 操作 -->
-        <template>
+        <template slot="opt" slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
         </template>
@@ -79,12 +79,13 @@
             :props="cascaederProps"
             @change="parentCateChange"
             clearable
+            change-on-select
           ></el-cascader>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addCateDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addCateDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addCate">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -207,11 +208,28 @@ export default {
         return this.message.error('获取父级分类失败!')
       }
       console.log(res.data)
-      this.parentCateList = res.data.slice(0, 20)
+      this.parentCateList = res.data
     },
     // 选择项发生变化出发这个函数
     parentCateChange () {
       console.log(this.selectedKeys)
+      // 如果 selectedKeys 数组中的length 大于0, 证明选中了父级分类
+      // 反之,就说明没有选中任何父分类
+      if (this.selectedKeys.length > 0) {
+        // 父级分类的 id
+        this.addCateForm.cat_pid = this.selectedKeys[this.selectedKeys.length - 1]
+        // 为当前分类的等级赋值
+        this.addCateForm.cat_level = this.selectedKeys.length
+      } else {
+        // 父级分类的 id
+        this.addCateForm.cat_pid = 0
+        // 为当前分类的等级赋值
+        this.addCateForm.cat_level = 0
+      }
+    },
+    // 点击按钮,添加新的分类
+    addCate () {
+      console.log(this.addCateForm)
     }
   }
 }
@@ -220,6 +238,10 @@ export default {
 <style lang="less" scoped>
 .treeTable {
   margin-top: 15px;
+}
+
+.el-cascader{
+  width: 100%;
 }
 
 </style>

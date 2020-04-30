@@ -60,7 +60,7 @@
     </el-card>
 
     <!-- 添加分类的对话框 -->
-    <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%">
+    <el-dialog title="添加分类" :visible.sync="addCateDialogVisible" width="50%" @close="addCateDialogClosed">
       <!-- 添加分类的表单 -->
       <el-form
         :model="addCateForm"
@@ -142,7 +142,7 @@ export default {
         // 父级分类的id
         cat_pid: 0,
         // 分类等级,默认一级
-        cat_level: 1
+        cat_level: 0
       },
       // 添加分类的表单验证规则对象
       addCateFormRules: {
@@ -229,7 +229,23 @@ export default {
     },
     // 点击按钮,添加新的分类
     addCate () {
-      console.log(this.addCateForm)
+      this.$refs.addCateFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.post('categories', this.addCateForm)
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加分类失败!')
+        }
+        this.$message.success('添加分类成功!')
+        this.getCateList()
+        this.addCateDialogVisible = false
+      })
+    },
+    // 监听对话框关闭事件,重置表单数据
+    addCateDialogClosed () {
+      this.$refs.addCateFormRef.resetFields()
+      this.selectedKeys = []
+      this.addCateForm.cat_level = 0
+      this.addCateForm.cat_pid = 0
     }
   }
 }

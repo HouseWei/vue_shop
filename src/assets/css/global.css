@@ -34,7 +34,7 @@ body,
 }
 
 .el-scrollbar {
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .el-cascader-node__postfix {

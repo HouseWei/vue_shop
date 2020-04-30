@@ -131,7 +131,7 @@ export default {
       // 查询条件
       queryInfo: {
         type: 3,
-        pagenum: 3,
+        pagenum: 1,
         pagesize: 5
       },
       // 商品分类的数据列表,默认为空

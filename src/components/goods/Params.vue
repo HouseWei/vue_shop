@@ -45,7 +45,7 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button icon="el-icon-edit" type="primary" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑</el-button>
-                <el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
+                <el-button icon="el-icon-delete" type="danger" size="mini"@click="removeParams(scope.row.attr_id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -67,7 +67,7 @@
             <el-table-column label="操作">
               <template slot-scope="scope">
                 <el-button icon="el-icon-edit" type="primary" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑</el-button>
-                <el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
+                <el-button icon="el-icon-delete" type="danger" size="mini" @click="removeParams(scope.row.attr_id)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -211,7 +211,7 @@ export default {
     },
     // tab页签点击事件的处理函数
     handleTabClick () {
-      console.log(this.activeName)
+      // console.log(this.activeName)
       this.getParamsData()
     },
     // 获取参数的列表参数
@@ -294,6 +294,28 @@ export default {
         this.getParamsData()
         this.editDialogVisible = false
       })
+    },
+    // 根据id删除参数
+    async removeParams (attrid) {
+      console.log(this.cateId + ':' + attrid)
+      const confirmResult = await this.$confirm('此操作将永久删除该参数, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+
+      // 用户取消了删除的操作
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('已取消删除')
+      }
+
+      // 删除的业务逻辑
+      const { data: res } = await this.$http.delete(`categories/${this.cateId}/attributes/${attrid}`)
+      if (res.meta.status !== 200) {
+        return this.$message.error('删除参数失败!')
+      }
+      this.$message.success('删除参数成功!')
+      this.getParamsData()
     }
   }
 }

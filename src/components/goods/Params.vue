@@ -44,7 +44,7 @@
             <el-table-column label="参数名称" prop="attr_name"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button icon="el-icon-edit" type="primary" size="mini">编辑</el-button>
+                <el-button icon="el-icon-edit" type="primary" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑</el-button>
                 <el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
               </template>
             </el-table-column>
@@ -66,7 +66,7 @@
             <el-table-column label="属性名称" prop="attr_name"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
-                <el-button icon="el-icon-edit" type="primary" size="mini">编辑</el-button>
+                <el-button icon="el-icon-edit" type="primary" size="mini" @click="showEditDialog(scope.row.attr_id)">编辑</el-button>
                 <el-button icon="el-icon-delete" type="danger" size="mini">删除</el-button>
               </template>
             </el-table-column>
@@ -96,6 +96,30 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addParams">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 修改参数的对话框 -->
+    <el-dialog
+      :title="'修改' + titleText"
+      :visible.sync="editDialogVisible"
+      width="30%"
+      @closed="editDialogClosed"
+    >
+      <!-- 修改参数的表单 -->
+      <el-form
+        :model="editForm"
+        :rules="editFormRules"
+        ref="editFormRef"
+        label-width="100px"
+      >
+        <el-form-item :label="titleText" prop="attr_name">
+          <el-input v-model="editForm.attr_name" :autofocus="true"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editParams">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -128,6 +152,16 @@ export default {
       addForm: {},
       //   添加表单的验证规则对象
       addFormRules: {
+        attr_name: [
+          { required: true, message: '请输入参数名称', trigger: 'blur' }
+        ]
+      },
+      // 控制修改对话框的显示与隐藏
+      editDialogVisible: false,
+      // 修改的表单数据对象
+      editForm: {},
+      //   修改表单的验证规则对象
+      editFormRules: {
         attr_name: [
           { required: true, message: '请输入参数名称', trigger: 'blur' }
         ]
@@ -223,6 +257,42 @@ export default {
         this.$message.success('添加参数成功!')
         this.getParamsData()
         this.addDialogVisible = false
+      })
+    },
+    // 点击按钮,展示修改的对话框
+    async showEditDialog (attrid) {
+      // 查询当前参数的信息
+      const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes/${attrid}`, {
+        params: { attr_sel: this.activeName }
+      })
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取参数信息失败!')
+      }
+
+      this.editForm = res.data
+      this.editDialogVisible = true
+    },
+    // 重置修改的表单
+    editDialogClosed () {
+      this.$refs.editFormRef.resetFields()
+    },
+    // 点击按钮,修改参数
+    editParams () {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${this.editForm.attr_id}`, {
+          attr_name: this.editForm.attr_name,
+          attr_sel: this.activeName
+        })
+
+        if (res.meta.status !== 200) {
+          return this.$message.error('修改参数失败!')
+        }
+
+        this.$message.success('修改参数成功!')
+        this.getParamsData()
+        this.editDialogVisible = false
       })
     }
   }

@@ -68,6 +68,10 @@ _vue["default"].use(_elementUi.Tabs);
 
 _vue["default"].use(_elementUi.TabPane);
 
+_vue["default"].use(_elementUi.Step);
+
+_vue["default"].use(_elementUi.Steps);
+
 _vue["default"].prototype.$message = _elementUi.Message; // 全局挂载
 
 _vue["default"].prototype.$confirm = _elementUi.MessageBox;

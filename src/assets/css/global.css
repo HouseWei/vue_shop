@@ -41,3 +41,7 @@ body,
 .el-cascader-node__postfix {
     line-height: 2.5;
 }
+
+.el-step__title{
+    font-size: 13px;
+}

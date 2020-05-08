@@ -30,7 +30,12 @@
         label-width="100px"
         label-position="top"
       >
-        <el-tabs v-model="activeIndex" tab-position="left" :before-leave="beforeTabLeave" :tab-click="tabClicked">
+        <el-tabs
+          v-model="activeIndex"
+          tab-position="left"
+          :before-leave="beforeTabLeave"
+          @tab-click="tabClicked"
+        >
           <el-tab-pane label="基本信息" name="0">
             <el-form-item label="商品名称" prop="goods_name">
               <el-input v-model="addForm.goods_name"></el-input>
@@ -55,8 +60,18 @@
             </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品参数" name="1">
-              <!-- 渲染表单的item项 -->
-              <el-form-item label="item.attr_name" prop="" v-for="item in manyTableData" :key="item.attr_id"></el-form-item>
+            <!-- 渲染表单的item项 -->
+            <el-form-item
+              :label="item.attr_name"
+              prop
+              v-for="item in manyTableData"
+              :key="item.attr_id"
+            >
+            <!-- 复选框组 -->
+              <el-checkbox-group v-model="item.attr_vals">
+                <el-checkbox :label="cb" v-for="(cb, i) in item.attr_vals" :key="i" border></el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
           </el-tab-pane>
           <el-tab-pane label="商品属性" name="2">商品属性</el-tab-pane>
           <el-tab-pane label="商品内容" name="3">商品图片</el-tab-pane>
@@ -146,17 +161,23 @@ export default {
     },
     // tab点击事件
     async tabClicked () {
-      console.log(111)
       // 证明访问的是动态参数面板
       if (this.activeIndex === '1') {
-        const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes`, {
-          params: { sel: 'many' }
-        })
+        const { data: res } = await this.$http.get(
+          `categories/${this.cateId}/attributes`,
+          {
+            params: { sel: 'many' }
+          }
+        )
+        console.log(res.data)
         if (res.meta.status !== 200) {
           return this.$message.error('获取动态参数失败')
         }
+        res.data.forEach(item => {
+          item.attr_vals =
+            item.attr_vals.length === 0 ? [] : item.attr_vals.split(',')
+        })
         this.manyTableData = res.data
-        console.log(res.data)
       }
     }
   }
@@ -166,5 +187,9 @@ export default {
 <style lang="less" scoped>
 .el-steps {
   margin: 15px 0;
+}
+
+.el-checkbox{
+    margin: 0 10px 0 0 !important;
 }
 </style>

@@ -76,6 +76,8 @@ _vue["default"].use(_elementUi.Checkbox);
 
 _vue["default"].use(_elementUi.CheckboxGroup);
 
+_vue["default"].use(_elementUi.Upload);
+
 _vue["default"].prototype.$message = _elementUi.Message; // 全局挂载
 
 _vue["default"].prototype.$confirm = _elementUi.MessageBox;

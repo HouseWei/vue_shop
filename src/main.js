@@ -8,6 +8,12 @@ import './assets/css/global.css'
 import './assets/fonts/iconfont.css'
 // 导入tree-grid
 import TreeTable from 'vue-table-with-tree-grid'
+// 导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+// require styles 导入富文本编辑器对应的样式
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 
 // 导入axios
 import axios from 'axios'
@@ -15,7 +21,7 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'
 // axios请求拦截(添加token,保证拥有获取数据的权限)
 axios.interceptors.request.use(config => {
-  console.log(config)
+  // console.log(config)
   config.headers.Authorization = window.sessionStorage.getItem('token')
   // 在最后必须 return config
   return config
@@ -25,6 +31,8 @@ Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.component('tree-table', TreeTable)
+// 将富文本编辑器注册为全局组件
+Vue.use(VueQuillEditor)
 
 // 时间过滤器
 Vue.filter('dateFormat', function (originVal) {

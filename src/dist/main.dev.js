@@ -14,6 +14,14 @@ require("./assets/fonts/iconfont.css");
 
 var _vueTableWithTreeGrid = _interopRequireDefault(require("vue-table-with-tree-grid"));
 
+var _vueQuillEditor = _interopRequireDefault(require("vue-quill-editor"));
+
+require("quill/dist/quill.core.css");
+
+require("quill/dist/quill.snow.css");
+
+require("quill/dist/quill.bubble.css");
+
 var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -21,12 +29,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 // 导入全局样式表
 // 导入字体图标
 // 导入tree-grid
+// 导入富文本编辑器
+// require styles 导入富文本编辑器对应的样式
+// import styles
+// for snow theme
+// for bubble theme
 // 导入axios
 // 配置请求的根路径
 _axios["default"].defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'; // axios请求拦截(添加token,保证拥有获取数据的权限)
 
 _axios["default"].interceptors.request.use(function (config) {
-  console.log(config);
+  // console.log(config)
   config.headers.Authorization = window.sessionStorage.getItem('token'); // 在最后必须 return config
 
   return config;
@@ -35,7 +48,10 @@ _axios["default"].interceptors.request.use(function (config) {
 _vue["default"].prototype.$http = _axios["default"];
 _vue["default"].config.productionTip = false;
 
-_vue["default"].component('tree-table', _vueTableWithTreeGrid["default"]); // 时间过滤器
+_vue["default"].component('tree-table', _vueTableWithTreeGrid["default"]); // 将富文本编辑器注册为全局组件
+
+
+_vue["default"].use(_vueQuillEditor["default"]); // 时间过滤器
 
 
 _vue["default"].filter('dateFormat', function (originVal) {

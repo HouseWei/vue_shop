@@ -95,7 +95,7 @@
             <!-- 富文本编辑器 -->
             <quill-editor v-model="addForm.goods_introduce"></quill-editor>
             <!-- 添加商品的按钮 -->
-            <el-button type="primary" class="btnAdd">添加商品</el-button>
+            <el-button type="primary" class="btnAdd" @click="add">添加商品</el-button>
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -108,6 +108,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+
 export default {
   data () {
     return {
@@ -123,7 +125,8 @@ export default {
         // 图片数组
         pics: [],
         // 商品详情描述
-        goods_introduce: ''
+        goods_introduce: '',
+        attrs: []
       },
       //   添加商品的表单验证规则对象
       addFormRules: {
@@ -255,6 +258,48 @@ export default {
       const picInfo = { pic: response.data.tmp_path }
       // 2.将图片信息对象,push 到pics
       this.addForm.pics.push(picInfo)
+    },
+    async add () {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) {
+          return this.$message.error('请填写必要的表单项!')
+        }
+
+        // 执行添加的业务逻辑
+        // 深度克隆
+        // const form = JSON.parse(JSON.stringify(this.addForm))
+        // form.goods_cat = form.goods_cat.join(',')
+
+        // 处理动态参数
+        this.manyTableData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals.join(' ')
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        // 处理静态属性
+        this.onlyTableData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        // lodash 深拷贝    cloneDeep(obj)
+        const form = _.cloneDeep(this.addForm)
+        form.goods_cat = form.goods_cat.join(',')
+        console.log(form)
+
+        // 发起请求,添加商品
+        // 商品名称必须是唯一的
+        const { data: res } = await this.$http.post('goods', form)
+        if (res.meta.status !== 201) {
+          return this.$message.error('添加商品失败!')
+        }
+        this.$message.success('添加成功')
+        this.$router.push('/goods')
+      })
     }
   }
 }

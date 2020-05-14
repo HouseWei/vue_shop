@@ -78,6 +78,10 @@ _vue["default"].use(_elementUi.CheckboxGroup);
 
 _vue["default"].use(_elementUi.Upload);
 
+_vue["default"].use(_elementUi.Timeline);
+
+_vue["default"].use(_elementUi.TimelineItem);
+
 _vue["default"].prototype.$message = _elementUi.Message; // 全局挂载
 
 _vue["default"].prototype.$confirm = _elementUi.MessageBox;

@@ -14,6 +14,9 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
+// 导入 nprogress 进度条加载效果
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 // 导入axios
 import axios from 'axios'
@@ -21,9 +24,17 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://timemeetyou.com:8889/api/private/v1/'
 // axios请求拦截(添加token,保证拥有获取数据的权限)
 axios.interceptors.request.use(config => {
+  // 在 request 中展示进度条
+  NProgress.start()
   // console.log(config)
   config.headers.Authorization = window.sessionStorage.getItem('token')
   // 在最后必须 return config
+  return config
+})
+
+axios.interceptors.response.use(config => {
+  // 在response 中隐藏进度条
+  NProgress.done()
   return config
 })
 Vue.prototype.$http = axios
